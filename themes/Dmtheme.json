@@ -1,0 +1,164 @@
+{
+  "$schema": "vscode://schemas/color-theme",
+  "name": "Mytick Dark",
+  "type": "dark",
+  "semanticHighlighting": true,
+
+  "colors": {
+
+  // Tabs header (the bar that holds tabs and the + button)
+  "editorGroupHeader.tabsBackground": "#0f172a",
+  "editorGroupHeader.tabsBorder": "#1e293b",
+  "editorGroupHeader.noTabsBackground": "#0f172a",
+
+  // Tabs themselves (keep consistent)
+  "tab.hoverBackground": "#1f2937",
+  "tab.border": "#1e293b",
+  "tab.activeBorderTop": "#7c3aed00",      // transparent (or pick your accent)
+  "tab.unfocusedActiveBackground": "#0f172a",
+  "tab.unfocusedInactiveBackground": "#1e293b",
+
+  // Command Center (the search field in the title bar)
+  "commandCenter.background": "#111827",
+  "commandCenter.foreground": "#f8fafc",
+  "commandCenter.activeBackground": "#1f2937",
+  "commandCenter.activeForeground": "#f8fafc",
+  "commandCenter.border": "#1e293b",
+  "commandCenter.inactiveForeground": "#94a3b8",
+
+  // Title bar stays dark
+  "titleBar.activeBackground": "#111827",
+  "titleBar.activeForeground": "#f8fafc",
+  "titleBar.inactiveBackground": "#1e293b",
+  "titleBar.inactiveForeground": "#94a3b8",
+
+    // ===== Editor (dark bg, light text) =====
+    "editor.background": "#0f172a",
+    "editor.foreground": "#f1f5f9",            // white variant for text
+    "editor.lineHighlightBackground": "#1e293b",
+    "editor.selectionBackground": "#334155aa",
+    "editor.inactiveSelectionBackground": "#1e293b88",
+    "editorCursor.foreground": "#f8fafc",      // white variant for caret
+    "editorWhitespace.foreground": "#1e293b",
+    "editorIndentGuide.background": "#1e293b",
+    "editorIndentGuide.activeBackground": "#475569",
+    "editorLineNumber.foreground": "#475569",
+    "editorLineNumber.activeForeground": "#e2e8f0",
+
+    // ===== Workbench (no white backgrounds) =====
+    "sideBar.background": "#1e293b",
+    "sideBar.foreground": "#e2e8f0",           // white variant text
+    "sideBarSectionHeader.background": "#334155",
+    "sideBarSectionHeader.foreground": "#f8fafc",
+
+    "activityBar.background": "#1e293b",
+    "activityBar.foreground": "#f8fafc",       // white variant text/icons
+    "activityBarBadge.background": "#334155",  // dark badge bg
+    "activityBarBadge.foreground": "#f8fafc",  // white text
+
+    "statusBar.background": "#111827",
+    "statusBar.foreground": "#f1f5f9",         // white text
+
+    "tab.activeBackground": "#0f172a",
+    "tab.inactiveBackground": "#1e293b",
+    "tab.activeForeground": "#f8fafc",         // white text
+    "tab.inactiveForeground": "#cbd5e1",
+
+    "titleBar.activeBackground": "#111827",
+    "titleBar.activeForeground": "#f8fafc",    // white text
+    "titleBar.inactiveBackground": "#1e293b",
+    "titleBar.inactiveForeground": "#94a3b8",
+
+    // ===== Panels / Editors =====
+    "panel.background": "#0f172a",
+    "panel.border": "#1e293b",
+    "panelTitle.activeForeground": "#f8fafc",  // white text
+    "panelTitle.inactiveForeground": "#94a3b8",
+
+    // ===== Lists / Trees / Quick Pick =====
+    "list.activeSelectionBackground": "#334155",
+    "list.activeSelectionForeground": "#f8fafc",
+    "list.hoverBackground": "#1f2937",
+    "list.hoverForeground": "#f8fafc",
+    "list.inactiveSelectionBackground": "#2a3649",
+    "list.inactiveSelectionForeground": "#e2e8f0",
+
+    // ===== Inputs / Dropdowns / Menus =====
+    "dropdown.background": "#1e293b",
+    "dropdown.foreground": "#f8fafc",          // white text
+    "dropdown.border": "#334155",
+
+    "input.background": "#1e293b",
+    "input.foreground": "#f8fafc",             // white text
+    "input.border": "#334155",
+    "input.placeholderForeground": "#94a3b8",
+
+    "menu.background": "#0f172a",
+    "menu.foreground": "#f8fafc",              // white text
+    "menu.separatorBackground": "#334155",
+    "menubar.selectionBackground": "#1f2937",
+    "menubar.selectionForeground": "#f8fafc",
+
+    // ===== Buttons / Badges (dark bg; light text) =====
+    "button.background": "#334155",
+    "button.hoverBackground": "#3b475b",
+    "button.foreground": "#f8fafc",            // white text
+
+    "badge.background": "#334155",
+    "badge.foreground": "#f8fafc",             // white text
+
+    // ===== Notifications (dark cards; light text) =====
+    "notification.background": "#1e293b",
+    "notification.foreground": "#f8fafc",      // white text
+    "notification.buttonBackground": "#334155",
+    "notification.buttonForeground": "#f8fafc",
+    "notification.infoBackground": "#1e293b",
+    "notification.warningBackground": "#2a3649",
+    "notification.errorBackground": "#2a2430",
+
+    // ===== Widgets / Peek / Scrollbar =====
+    "editorWidget.background": "#0f172a",
+    "editorWidget.foreground": "#f1f5f9",
+    "peekViewEditor.background": "#0f172a",
+    "peekViewResult.background": "#0f172a",
+    "peekViewTitle.background": "#0f172a",
+    "scrollbarSlider.background": "#47556988",
+    "scrollbarSlider.hoverBackground": "#64748baa",
+    "scrollbarSlider.activeBackground": "#94a3b8aa",
+
+    // ===== Borders (keep dark) =====
+    "focusBorder": "#334155",
+    "selection.background": "#334155aa"
+  },
+
+  // ===== Syntax highlighting =====
+  "tokenColors": [
+    { "scope": ["comment"], "settings": { "foreground": "#94a3b8", "fontStyle": "italic" } },
+    { "scope": ["keyword"], "settings": { "foreground": "#c084fc", "fontStyle": "bold" } },
+    { "scope": ["support.type","entity.name.type"], "settings": { "foreground": "#60a5fa" } },
+    { "scope": ["string"], "settings": { "foreground": "#4ade80" } },
+    { "scope": ["constant.numeric"], "settings": { "foreground": "#f472b6" } },
+    { "scope": ["variable.other.constant"], "settings": { "foreground": "#38bdf8" } },
+    { "scope": ["entity.name.function"], "settings": { "foreground": "#f1f5f9" } },  // white-ish
+    { "scope": ["variable.parameter"], "settings": { "foreground": "#e5e7eb" } },    // white-ish
+    { "scope": ["entity.name.type.interface"], "settings": { "foreground": "#60a5fa", "fontStyle": "bold" } },
+    { "scope": ["entity.name.type.class"], "settings": { "foreground": "#38bdf8" } },
+    { "scope": ["meta.decorator"], "settings": { "foreground": "#fbbf24" } },
+    { "scope": ["entity.name.tag"], "settings": { "foreground": "#fb923c" } },
+    { "scope": ["entity.other.attribute-name"], "settings": { "foreground": "#38bdf8" } }
+  ],
+
+  "semanticTokenColors": {
+    "function": "#f1f5f9",
+    "parameter": "#e5e7eb",
+    "property": "#e5e7eb",
+    "variable.readonly": "#e5e7eb",
+    "type": "#60a5fa",
+    "class": "#38bdf8",
+    "enumMember": "#38bdf8",
+    "keyword": "#c084fc",
+    "string": "#4ade80",
+    "number": "#f472b6",
+    "comment": "#94a3b8"
+  },
+}

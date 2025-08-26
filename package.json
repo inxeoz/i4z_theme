@@ -1,0 +1,42 @@
+{
+  "name": "mytick-light",
+  "displayName": "Mytick Light",
+  "description": "A crisp light theme with violet keywords, lime strings, blue types, and slate comments.",
+  "version": "0.0.1",
+  "publisher": "you",
+  "engines": { "vscode": "^1.80.0" },
+  "categories": ["Themes"],
+  "contributes": {
+    "themes": [
+
+         {
+        "label": "Dark Mtheme",
+        "uiTheme": "vs",
+        "path": "./themes/Dmtheme.json"
+      },
+
+      {
+        "label": "Light Mtheme",
+        "uiTheme": "vs",
+        "path": "./themes/mtheme.json"
+      },
+
+       {
+        "label": "Dark jtheme",
+        "uiTheme": "vs",
+        "path": "./themes/Jmtheme.json"
+      }
+
+       
+    ],
+    "configuration": {
+      "properties": {
+        "mytickLight.semanticHighlighting": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable semantic token coloring (recommended)."
+        }
+      }
+    }
+  }
+}
