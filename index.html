@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VS Code Theme Tester (Extended)</title>
+<style>
+  :root{
+    --tb-bg:#111827; --tb-fg:#f8fafc; --tb-bg-inactive:#1e293b; --tb-fg-inactive:#94a3b8;
+    --cmd-bg:#111827; --cmd-fg:#f8fafc; --cmd-border:#2b3a52;
+
+    --actbar-bg:#1e293b; --actbar-fg:#f8fafc; --actbar-badge-bg:#334155; --actbar-badge-fg:#f8fafc;
+
+    --sidebar-bg:#1e293b; --sidebar-fg:#e2e8f0; --sidebar-border:#2b3a52; --sidebar-sec-bg:#253149; --sidebar-sec-fg:#f8fafc;
+
+    --eg-header-bg:#0f172a; --eg-header-border:#2b3a52;
+
+    --tab-bg:#1e293b; --tab-bg-active:#0f172a; --tab-fg:#cbd5e1; --tab-fg-active:#f8fafc; --tab-hover:#1f2937; --tab-border:#2b3a52; --tab-active-line:#7c3aed;
+
+    --editor-bg:#0f172a; --editor-fg:#f1f5f9; --line-hl:#1c2540; --sel-bg:#43526dcc; --sel-inactive:#2a385388; --caret:#f8fafc; --lnum:#556882; --lnum-active:#e2e8f0;
+    --bracket-match:#33415566; --bracket-border:#a78bfa;
+
+    --panel-bg:#0f172a; --panel-border:#2b3a52;
+
+    --status-bg:#111827; --status-fg:#f1f5f9; --status-border:#2b3a52;
+
+    --link:#60a5fa; --link-active:#93c5fd; --focus:#7c3aed;
+
+    --tok-comment:#94a3b8; --tok-keyword:#c084fc; --tok-type:#60a5fa; --tok-string:#4ade80;
+    --tok-number:#f472b6; --tok-const:#38bdf8; --tok-fn:#f1f5f9; --tok-param:#e5e7eb;
+    --tok-tag:#fb923c; --tok-attr:#38bdf8; --tok-decorator:#fbbf24; --tok-class:#38bdf8; --tok-interface:#60a5fa;
+
+    --danger:#ef4444; --warn:#eab308; --ok:#22c55e;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:var(--editor-bg);color:var(--editor-fg)}
+  .layout{display:grid;grid-template-rows:36px 1fr 24px;height:100vh}
+
+  /* Title bar */
+  .titlebar{background:var(--tb-bg);color:var(--tb-fg);height:36px;display:flex;align-items:center;padding:0 8px;gap:8px;border-bottom:1px solid var(--eg-header-border)}
+  .titlebar .cmd{flex:1;height:26px;border:1px solid var(--cmd-border);background:var(--cmd-bg);color:var(--cmd-fg);border-radius:6px;display:flex;align-items:center;padding:0 8px;opacity:.95}
+  .titlebar .btn{background:transparent;border:1px solid var(--cmd-border);color:var(--tb-fg);padding:4px 8px;border-radius:6px;cursor:pointer}
+  .titlebar .btn:hover{background:rgba(255,255,255,.06)}
+
+  /* Workbench columns */
+  .workbench{display:grid;grid-template-columns:48px minmax(180px,280px) 6px 1fr;min-height:0}
+  .activity{background:var(--actbar-bg);color:var(--actbar-fg);display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0;border-right:1px solid var(--sidebar-border)}
+  .activity .item{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;cursor:pointer}
+  .activity .item:hover{background:rgba(255,255,255,.06)}
+  .activity .badge{font-size:10px;padding:2px 6px;border-radius:999px;background:var(--actbar-badge-bg);color:var(--actbar-badge-fg)}
+
+  .sidebar{background:var(--sidebar-bg);color:var(--sidebar-fg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;min-width:0}
+  .side-header{background:var(--sidebar-sec-bg);color:var(--sidebar-sec-fg);padding:6px 10px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+  .files{padding:6px 0;overflow:auto;font-size:13px;line-height:22px}
+  .folder,.file{padding:0 12px 0 8px;display:flex;align-items:center;gap:8px;cursor:pointer;white-space:nowrap}
+  .file:hover,.folder:hover{background:rgba(255,255,255,.06)}
+  .indent{width:12px;flex:none}
+  .twist{width:12px;text-align:center;opacity:.8}
+  .icon{width:14px;opacity:.8}
+
+  /* Resizer */
+  .resizer{cursor:col-resize;background:transparent}
+  .resizer:hover{background:rgba(255,255,255,.05)}
+
+  /* Editor area */
+  .editor-area{display:grid;grid-template-rows:auto auto 1fr auto;min-width:0}
+  .tabbar{background:var(--eg-header-bg);border-bottom:1px solid var(--eg-header-border);display:flex;gap:1px;align-items:end;padding:0 6px;overflow:auto}
+  .tab{background:var(--tab-bg);color:var(--tab-fg);padding:8px 12px;font-size:12.5px;border-left:1px solid var(--tab-border);border-right:1px solid var(--tab-border);display:flex;gap:8px;align-items:center;position:relative;cursor:pointer;border-top-left-radius:6px;border-top-right-radius:6px}
+  .tab.active{background:var(--tab-bg-active);color:var(--tab-fg-active)}
+  .tab.active::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--tab-active-line);border-top-left-radius:6px;border-top-right-radius:6px}
+  .tab .x{opacity:.7}
+  .tab .x:hover{opacity:1}
+
+  /* Find bar */
+  .findbar{display:none;background:var(--eg-header-bg);border-bottom:1px solid var(--eg-header-border);padding:6px 8px;gap:8px;align-items:center}
+  .findbar.show{display:flex}
+  .findbar input{background:var(--cmd-bg);color:var(--cmd-fg);border:1px solid var(--cmd-border);border-radius:6px;height:26px;padding:0 8px;min-width:220px}
+  .findbar .meta{opacity:.8;font-size:12px}
+
+  .editor{position:relative;background:var(--editor-bg);color:var(--editor-fg);display:grid;grid-template-columns:46px 1fr;min-height:0}
+  .gutter{background:var(--editor-bg);border-right:1px solid var(--eg-header-border);color:var(--lnum);font-size:12px;padding:8px 8px;text-align:right;user-select:none;overflow:hidden}
+  .gutter span.active{color:var(--lnum-active)}
+  .code{position:relative;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;font-size:13px;line-height:20px;padding:8px 12px;background:linear-gradient(var(--line-hl), var(--line-hl)) no-repeat 0 calc(var(--hl-line)*20px + 8px)/100% 20px, var(--editor-bg)}
+  .code ::selection{background:var(--sel-bg)}
+  mark.find{background:var(--sel-bg);padding:0}
+
+  .panel{background:var(--panel-bg);color:var(--editor-fg);border-top:1px solid var(--panel-border);height:180px;padding:8px 12px;font-size:12px;overflow:auto}
+
+  /* Status bar */
+  .status{background:var(--status-bg);color:var(--status-fg);display:flex;gap:18px;align-items:center;padding:0 10px;border-top:1px solid var(--status-border);font-size:12px}
+  .status .link{color:var(--link);cursor:pointer}
+  .status .link:hover{color:var(--link-active)}
+
+  /* UI Playground */
+  .playground{display:flex;gap:10px;align-items:center;padding:6px 8px;background:var(--eg-header-bg);border-bottom:1px solid var(--eg-header-border)}
+  .pg-btn{border:1px solid var(--cmd-border);background:var(--cmd-bg);color:var(--cmd-fg);border-radius:6px;padding:6px 10px;cursor:pointer}
+  .pg-btn:hover{outline:1px solid var(--focus)}
+  .pg-input{border:1px solid var(--cmd-border);background:var(--cmd-bg);color:var(--cmd-fg);border-radius:6px;height:28px;padding:0 8px}
+  .pg-select{border:1px solid var(--cmd-border);background:var(--cmd-bg);color:var(--cmd-fg);border-radius:6px;height:28px;padding:0 6px}
+
+  /* Context menus */
+  .ctx{position:absolute;background:#0b0f1a;border:1px solid #334155;color:#e2e8f0;border-radius:8px;display:none;flex-direction:column;min-width:180px;z-index:200}
+  .ctx.show{display:flex}
+  .ctx .item{padding:8px 10px;cursor:pointer}
+  .ctx .item:hover{background:#141c2a}
+  .ctx .sep{height:1px;background:#334155;margin:4px 0}
+
+  /* Toolbar */
+  .toolbar{position:fixed;right:12px;bottom:28px;z-index:5;display:flex;gap:8px;align-items:center;background:#0006;color:#fff;padding:8px 10px;border-radius:10px;backdrop-filter:blur(6px)}
+  .toolbar input[type=file]{display:none}
+  .btn{padding:6px 10px;border:1px solid #ffffff55;border-radius:8px;cursor:pointer;background:transparent;color:#fff;font-size:12px}
+  .btn:hover{background:#ffffff22}
+  .small{font-size:11px;opacity:.8}
+
+  /* Responsive */
+  @media (max-width:900px){
+    .workbench{grid-template-columns:48px minmax(0,60vw) 6px 1fr}
+  }
+  @media (max-width:720px){
+    .workbench{grid-template-columns:48px 0 0 1fr}
+    .sidebar{display:none}
+    .resizer{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="titlebar">
+    <div>🟪</div>
+    <div class="cmd" id="cmd">Search (fake command center)</div>
+    <div class="small">Theme Tester</div>
+    <button class="btn" id="toggleSide">☰</button>
+  </div>
+
+  <div class="workbench">
+    <aside class="activity">
+      <div class="item" id="act-explorer" title="Explorer">📁</div>
+      <div class="item" id="act-search" title="Search">🔍</div>
+      <div class="item" id="act-debug" title="Run">🐛</div>
+      <div class="item" id="act-tests" title="Tests">🧪</div>
+      <div class="badge">4</div>
+    </aside>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="side-header">
+        <span>Explorer</span>
+        <span class="small" id="collapseAll" style="cursor:pointer">Collapse All</span>
+      </div>
+      <div class="files" id="files"></div>
+    </aside>
+
+    <div class="resizer" id="resizer"></div>
+
+    <main class="editor-area">
+      <div class="tabbar" id="tabs"></div>
+
+      <div class="playground">
+        <button class="pg-btn">Primary</button>
+        <button class="pg-btn">Ghost</button>
+        <input class="pg-input" placeholder="Input…" />
+        <select class="pg-select">
+          <option>Dropdown item</option>
+          <option>Another item</option>
+        </select>
+        <span class="small">UI Playground</span>
+      </div>
+
+      <div class="findbar" id="findbar">
+        <input id="findInput" placeholder="Find (Ctrl/Cmd+F)"/>
+        <span class="meta" id="findMeta">0 results</span>
+        <button class="pg-btn" id="findPrev">Prev</button>
+        <button class="pg-btn" id="findNext">Next</button>
+        <button class="pg-btn" id="findClose">Close</button>
+      </div>
+
+      <section class="editor" id="editor">
+        <div class="gutter" id="gutter"></div>
+        <pre class="code" id="code" tabindex="0"></pre>
+      </section>
+
+      <section class="panel" id="panel">Problems: 0  |  Output: Theme preview panel. Drop/paste a VS Code theme JSON to test it live.</section>
+    </main>
+  </div>
+
+  <footer class="status">
+    <span>UTF-8</span>
+    <span>LF</span>
+    <span class="link" id="open">theme.json</span>
+    <span id="lang">TypeScript React</span>
+    <span id="pos">Ln 12, Col 17</span>
+  </footer>
+</div>
+
+<!-- Context menus -->
+<div class="ctx" id="ctx-files">
+  <div class="item" data-act="open">Open</div>
+  <div class="item" data-act="rename">Rename</div>
+  <div class="item" data-act="delete">Delete</div>
+  <div class="sep"></div>
+  <div class="item" data-act="copy">Copy Path</div>
+</div>
+<div class="ctx" id="ctx-editor">
+  <div class="item" data-act="find">Find…</div>
+  <div class="item" data-act="copyAll">Copy All</div>
+  <div class="sep"></div>
+  <div class="item" data-act="selectAll">Select All</div>
+</div>
+
+<!-- Tools -->
+<div class="toolbar">
+  <label class="btn">
+    Load JSON
+    <input type="file" id="file" accept=".json,application/json"/>
+  </label>
+  <button class="btn" id="paste">Paste JSON</button>
+  <button class="btn" id="reset">Reset</button>
+  <button class="btn" id="download">Download Theme</button>
+</div>
+
+<script>
+/* ---------------- fake project (folders + files) ---------------- */
+const SAMPLE_TREE = {
+  src: {
+    components: {
+      Navigation: { "ProfileMenu.tsx": "tsx" },
+      common: { "ConditionalTooltip.tsx": "tsx" }
+    },
+    styles: { "theme.ts": "ts" }
+  },
+  "README.md": "md"
+};
+
+const SAMPLE_CODE =
+`// components/Navigation/ProfileMenu.tsx
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { DropdownMenu, DropdownMenuItem } from "lucide-react";
+import { ConditionalTooltip } from "@/components/common/ConditionalTooltip";
+
+interface ProfileMenuProps {
+  getThemeClasses: () => string;
+  getAccentColorClass: () => string;
+  showTooltips: boolean;
+  onToggleTooltips: (checked: boolean) => void;
+  onOpenApiConfig: () => void;
+}
+
+export function ProfileMenu({
+  getThemeClasses,
+  getAccentColorClass,
+  showTooltips,
+  onToggleTooltips,
+  onOpenApiConfig
+}: ProfileMenuProps) {
+  return (
+    <ConditionalTooltip show={showTooltips} content={
+      <div className={getThemeClasses()}>
+        <p className="font-medium">User Profile</p>
+        <p className="text-sm">Access profile settings, API config, and more.</p>
+      </div>
+    }>
+      <DropdownMenu>
+        <DropdownMenuItem onClick={onOpenApiConfig} icon="Plug">
+          Open API Config
+        </DropdownMenuItem>
+        <DropdownMenuItem icon="HelpCircle">Help</DropdownMenuItem>
+        <DropdownMenuItem icon="LogOut">Log out</DropdownMenuItem>
+      </DropdownMenu>
+      <div className="mt-2 flex gap-2 items-center">
+        <Switch checked={showTooltips} onCheckedChange={onToggleTooltips} />
+        <Button variant="ghost">User Profile</Button>
+      </div>
+    </ConditionalTooltip>
+  );
+}
+`;
+
+const filesRoot = document.getElementById("files");
+function renderTree(node, depth=0, path=[]){
+  for(const key of Object.keys(node)){
+    const val = node[key];
+    const indent = '<span class="indent"></span>'.repeat(depth);
+    if(typeof val === "object"){
+      const id = path.concat(key).join("/");
+      filesRoot.insertAdjacentHTML("beforeend",
+        `<div class="folder" data-id="${id}" data-open="true">${indent}<span class="twist">▾</span><span class="icon">📂</span>${key}</div>`);
+      renderTree(val, depth+1, path.concat(key));
+    } else {
+      const id = path.concat(key).join("/");
+      filesRoot.insertAdjacentHTML("beforeend",
+        `<div class="file" data-id="${id}" data-ext="${val}">${indent}<span class="indent"></span><span class="icon">📄</span>${key}</div>`);
+    }
+  }
+}
+renderTree(SAMPLE_TREE);
+
+/* collapse/expand folders */
+filesRoot.addEventListener("click",(e)=>{
+  const el = e.target.closest(".folder,.file");
+  if(!el) return;
+  if(el.classList.contains("folder")){
+    const id = el.dataset.id;
+    const open = el.dataset.open === "true";
+    el.dataset.open = String(!open);
+    el.querySelector(".twist").textContent = open ? "▸" : "▾";
+    // hide/show children
+    let sibling = el.nextElementSibling;
+    while(sibling && (sibling.dataset.id?.startsWith(id+"/") || sibling.classList.contains("file") && sibling.dataset.id?.startsWith(id+"/"))){
+      if(open){
+        sibling.style.display = "none";
+      }else{
+        // only show immediate children (keep nested folders obeying their own state)
+        const immediate = sibling.dataset.id.split("/").length === id.split("/").length + 1;
+        sibling.style.display = immediate ? "" : (sibling.style.display ?? "");
+      }
+      sibling = sibling.nextElementSibling;
+    }
+  } else {
+    openFile(el.dataset.id);
+  }
+});
+document.getElementById("collapseAll").onclick=()=>{
+  document.querySelectorAll(".folder").forEach(f=>{
+    if(f.dataset.open==="true") f.click();
+  });
+};
+
+/* ---------------- tabs / editor ---------------- */
+const tabs = document.getElementById("tabs");
+const codeEl = document.getElementById("code");
+const gutter = document.getElementById("gutter");
+let activePath = null;
+
+function ensureTab(path){
+  let t = [...tabs.children].find(x=>x.dataset.path===path);
+  if(!t){
+    const name = path.split("/").pop();
+    t = document.createElement("div");
+    t.className = "tab";
+    t.dataset.path = path;
+    t.innerHTML = `<span>${name}</span> <span class="x" title="Close">✕</span>`;
+    t.addEventListener("click",(e)=>{
+      if(e.target.classList.contains("x")) closeTab(path);
+      else setActive(path);
+    });
+    tabs.appendChild(t);
+  }
+}
+function openFile(path){
+  ensureTab(path); setActive(path);
+}
+function setActive(path){
+  activePath = path;
+  [...tabs.children].forEach(t=>t.classList.toggle("active", t.dataset.path===path));
+  const text = SAMPLE_CODE; // could vary per ext
+  codeEl.innerHTML = highlight(text);
+  const lines = text.split("\n").length;
+  gutter.innerHTML = Array.from({length:lines}, (_,i)=>`<span class="${i===11?"active":""}">${i+1}</span>`).join("<br/>");
+  codeEl.style.setProperty("--hl-line", 11);
+}
+function closeTab(path){
+  const t = [...tabs.children].find(x=>x.dataset.path===path);
+  if(!t) return;
+  const wasActive = t.classList.contains("active");
+  t.remove();
+  if(wasActive && tabs.children.length){
+    setActive(tabs.children[tabs.children.length-1].dataset.path);
+  } else if(!tabs.children.length){
+    codeEl.textContent = "";
+    gutter.textContent = "";
+    activePath = null;
+  }
+}
+
+/* tiny TS/TSX highlighter */
+const KEYWORDS = ["import","from","export","function","return","const","let","var","interface","type","extends","implements","new","if","else","switch","case","break","default","for","while","do","try","catch","finally","class","public","private","protected","readonly","async","await"];
+const KEYWORD_RE = new RegExp("\\b(" + KEYWORDS.join("|") + ")\\b","g");
+const TYPE_RE = /\b([A-Z][A-Za-z0-9_]+)\b/g;
+const STR_RE = /(\".*?\"|'.*?'|`.*?`)/g;
+const NUM_RE = /\b(\d+(\.\d+)?)\b/g;
+const COMMENT_RE = /(\/\*[\s\S]*?\*\/|\/\/.*?$)/gm;
+const TAG_RE = /<\/?([A-Za-z][A-Za-z0-9\-]*)(?=[\s>])/g;
+const ATTR_RE = /\b([A-Za-z_:][A-Za-z0-9_:\-]*)(=)/g;
+const DECORATOR_RE = /(@[A-Za-z_][A-Za-z0-9_]*)/g;
+const FN_RE = /\b([A-Za-z_][A-Za-z0-9_]*)\s*(?=\()/g;
+
+function escapeHTML(s){return s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function highlight(tsx){
+  const store=[]; const stash=m=>{const id="§§"+store.length+"§§";store.push(m);return id;}
+  tsx = tsx.replace(COMMENT_RE, m=>stash(`<span class="tok-comment">${escapeHTML(m)}</span>`));
+  tsx = tsx.replace(STR_RE, m=>stash(`<span class="tok-string">${escapeHTML(m)}</span>`));
+  tsx = tsx.replace(TAG_RE, (_,t)=>`<span class="tok-tag">&lt;${t}</span>`);
+  tsx = tsx.replace(ATTR_RE, (_,a,eq)=>`<span class="tok-attr">${a}</span>${eq}`);
+  tsx = tsx.replace(KEYWORD_RE, m=>`<span class="tok-keyword">${m}</span>`);
+  tsx = tsx.replace(NUM_RE, m=>`<span class="tok-number">${m}</span>`);
+  tsx = tsx.replace(DECORATOR_RE, m=>`<span class="tok-decorator">${m}</span>`);
+  tsx = tsx.replace(FN_RE, m=>`<span class="tok-fn">${m}</span>`);
+  tsx = tsx.replace(TYPE_RE, m=>`<span class="tok-type">${m}</span>`);
+  return tsx.replace(/§§(\d+)§§/g,(_,i)=>store[i]);
+}
+
+/* find bar + keyboard shortcuts */
+const findbar = document.getElementById("findbar");
+const findInput = document.getElementById("findInput");
+const findMeta = document.getElementById("findMeta");
+let findMatches = []; let findIndex = -1;
+
+function runFind(q){
+  const raw = SAMPLE_CODE;
+  if(!q){ codeEl.innerHTML = highlight(raw); findMeta.textContent="0 results"; return; }
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  const re = new RegExp(esc,"gi");
+  let i=0, out="";
+  const parts = raw.split(/\n/);
+  findMatches = [];
+  for(let ln=0; ln<parts.length; ln++){
+    let line = parts[ln];
+    let prev = 0, m;
+    while((m=re.exec(line))){
+      findMatches.push({ln, start:m.index, end:m.index+m[0].length});
+    }
+  }
+  // Re-render with highlight + <mark> overlays
+  let html = highlight(raw);
+  html = html.replace(re, m=>`<mark class="find">${m}</mark>`);
+  codeEl.innerHTML = html;
+  findMeta.textContent = `${findMatches.length} results`;
+  findIndex = 0;
+  scrollToFind(findIndex);
+}
+function scrollToFind(i){
+  const marks = codeEl.querySelectorAll("mark.find");
+  if(!marks.length) return;
+  const el = marks[i % marks.length];
+  el.scrollIntoView({block:"center"});
+}
+document.addEventListener("keydown",(e)=>{
+  const mod = e.ctrlKey || e.metaKey;
+  if(mod && e.key.toLowerCase()==="f"){ e.preventDefault(); findbar.classList.add("show"); findInput.focus(); findInput.select(); }
+});
+document.getElementById("findPrev").onclick=()=>{ if(findMatches.length){ findIndex=(findIndex-1+findMatches.length)%findMatches.length; scrollToFind(findIndex);} };
+document.getElementById("findNext").onclick=()=>{ if(findMatches.length){ findIndex=(findIndex+1)%findMatches.length; scrollToFind(findIndex);} };
+document.getElementById("findClose").onclick=()=>{ findbar.classList.remove("show"); runFind(""); };
+findInput.addEventListener("input", e=>runFind(e.target.value));
+
+/* resizable sidebar */
+const sidebar = document.getElementById("sidebar");
+const resizer = document.getElementById("resizer");
+let startX=0, startW=0, dragging=false;
+resizer.addEventListener("mousedown",(e)=>{dragging=true;startX=e.clientX;startW=sidebar.getBoundingClientRect().width;document.body.style.userSelect="none";});
+window.addEventListener("mousemove",(e)=>{ if(!dragging) return; const dx=e.clientX-startX; const w=Math.max(160, Math.min(480, startW+dx)); sidebar.style.width=w+"px";});
+window.addEventListener("mouseup",()=>{dragging=false;document.body.style.userSelect="";});
+
+/* toggle sidebar */
+document.getElementById("toggleSide").onclick = ()=>{ const col = getComputedStyle(sidebar).display; sidebar.style.display = (col==="none"?"flex":"none"); };
+
+/* context menus */
+const ctxFiles = document.getElementById("ctx-files");
+const ctxEditor = document.getElementById("ctx-editor");
+filesRoot.addEventListener("contextmenu",(e)=>{
+  e.preventDefault();
+  const target = e.target.closest(".file,.folder");
+  if(!target) return;
+  showCtx(ctxFiles, e.pageX, e.pageY);
+  ctxFiles.dataset.path = target.dataset.id;
+});
+document.getElementById("editor").addEventListener("contextmenu",(e)=>{
+  e.preventDefault(); showCtx(ctxEditor, e.pageX, e.pageY);
+});
+document.addEventListener("click",()=>{hideCtx(ctxFiles);hideCtx(ctxEditor);});
+ctxFiles.addEventListener("click",(e)=>{
+  const act = e.target.dataset.act; if(!act) return;
+  const p = ctxFiles.dataset.path;
+  alert(`${act} → ${p}`);
+});
+ctxEditor.addEventListener("click",(e)=>{
+  const act = e.target.dataset.act; if(!act) return;
+  if(act==="find"){ findbar.classList.add("show"); findInput.focus(); findInput.select(); }
+  if(act==="copyAll"){ navigator.clipboard.writeText(SAMPLE_CODE); }
+  if(act==="selectAll"){ /* visual only */ window.getSelection().selectAllChildren(codeEl); }
+  hideCtx(ctxEditor);
+});
+function showCtx(el,x,y){ el.style.left=x+"px"; el.style.top=y+"px"; el.classList.add("show"); }
+function hideCtx(el){ el.classList.remove("show"); }
+
+/* ---------------- theme plumbing ---------------- */
+let CURRENT_THEME = null;
+
+function applyTheme(theme){
+  CURRENT_THEME = theme;
+  const colors = theme.colors || {};
+  const map = (key, css) => { if(colors[key]) document.documentElement.style.setProperty(css, colors[key]); };
+
+  // titlebar + command center
+  map("titleBar.activeBackground","--tb-bg");
+  map("titleBar.activeForeground","--tb-fg");
+  map("titleBar.inactiveBackground","--tb-bg-inactive");
+  map("titleBar.inactiveForeground","--tb-fg-inactive");
+  map("commandCenter.background","--cmd-bg");
+  map("commandCenter.foreground","--cmd-fg");
+  map("commandCenter.border","--cmd-border");
+
+  // activity & sidebar
+  map("activityBar.background","--actbar-bg");
+  map("activityBar.foreground","--actbar-fg");
+  map("activityBarBadge.background","--actbar-badge-bg");
+  map("activityBarBadge.foreground","--actbar-badge-fg");
+
+  map("sideBar.background","--sidebar-bg");
+  map("sideBar.foreground","--sidebar-fg");
+  map("sideBar.border","--sidebar-border");
+  map("sideBarSectionHeader.background","--sidebar-sec-bg");
+  map("sideBarSectionHeader.foreground","--sidebar-sec-fg");
+
+  // tabs & header
+  map("editorGroupHeader.tabsBackground","--eg-header-bg");
+  map("editorGroupHeader.tabsBorder","--eg-header-border");
+  map("tab.inactiveBackground","--tab-bg");
+  map("tab.activeBackground","--tab-bg-active");
+  map("tab.inactiveForeground","--tab-fg");
+  map("tab.activeForeground","--tab-fg-active");
+  map("tab.hoverBackground","--tab-hover");
+  map("tab.border","--tab-border");
+  map("tab.activeBorderTop","--tab-active-line");
+
+  // editor
+  map("editor.background","--editor-bg");
+  map("editor.foreground","--editor-fg");
+  map("editor.lineHighlightBackground","--line-hl");
+  map("editor.selectionBackground","--sel-bg");
+  map("editor.inactiveSelectionBackground","--sel-inactive");
+  map("editorCursor.foreground","--caret");
+  map("editorLineNumber.foreground","--lnum");
+  map("editorLineNumber.activeForeground","--lnum-active");
+  map("editorBracketMatch.background","--bracket-match");
+  map("editorBracketMatch.border","--bracket-border");
+
+  // panel + status + links
+  map("panel.background","--panel-bg");
+  map("panel.border","--panel-border");
+  map("statusBar.background","--status-bg");
+  map("statusBar.foreground","--status-fg");
+  map("statusBar.border","--status-border");
+  map("textLink.foreground","--link");
+  map("textLink.activeForeground","--link-active");
+  map("focusBorder","--focus");
+
+  // token colors
+  const tokenColors = theme.tokenColors || [];
+  const sem = theme.semanticTokenColors || {};
+  const pick = (scopes) => {
+    for(const rule of tokenColors){
+      const s = rule.scope;
+      const arr = Array.isArray(s)?s:(typeof s==="string"?s.split(",").map(x=>x.trim()):[]);
+      if(arr.some(x=>scopes.includes(x)) && rule.settings?.foreground) return rule.settings.foreground;
+    }
+    for(const sc of scopes){ if(sem[sc]) return sem[sc]; }
+    return null;
+  };
+  const setTok = (varName, scopes) => {
+    const c = pick(scopes);
+    if(c) document.documentElement.style.setProperty(varName, c);
+  };
+  setTok("--tok-comment", ["comment","punctuation.definition.comment","comment"]);
+  setTok("--tok-keyword", ["keyword","storage.type","storage.modifier","keyword.control"]);
+  setTok("--tok-type", ["support.type","entity.name.type","entity.name.type.interface","storage.type.type","meta.type.annotation","entity.name.namespace","type","class"]);
+  setTok("--tok-string", ["string","punctuation.definition.string"]);
+  setTok("--tok-number", ["constant.numeric","number"]);
+  setTok("--tok-const", ["variable.other.constant","support.constant","constant.language","enumMember","property"]);
+  setTok("--tok-fn", ["entity.name.function","support.function","meta.function-call","function"]);
+  setTok("--tok-param", ["variable.parameter","meta.parameter","parameter"]);
+  setTok("--tok-tag", ["entity.name.tag"]);
+  setTok("--tok-attr", ["entity.other.attribute-name","meta.tag.attributes.tsx","property"]);
+  setTok("--tok-decorator", ["meta.decorator","storage.type.annotation","punctuation.decorator"]);
+  setTok("--tok-class", ["entity.name.type.class","meta.class","support.class","class"]);
+  setTok("--tok-interface", ["entity.name.type.interface.ts","interface"]);
+
+  // repaint current line bg
+  codeEl.style.background = `linear-gradient(var(--line-hl), var(--line-hl)) no-repeat 0 calc(var(--hl-line)*20px + 8px)/100% 20px, var(--editor-bg)`;
+}
+
+/* built-in default (your dark) */
+const DEFAULT_THEME = {
+  "$schema":"vscode://schemas/color-theme",
+  "name":"Mytick Dark",
+  "type":"dark",
+  "semanticHighlighting":true,
+  "colors":{
+    "titleBar.activeBackground":"#111827","titleBar.activeForeground":"#f8fafc",
+    "titleBar.inactiveBackground":"#1e293b","titleBar.inactiveForeground":"#94a3b8",
+    "commandCenter.background":"#111827","commandCenter.foreground":"#f8fafc","commandCenter.border":"#2b3a52",
+    "editorGroupHeader.tabsBackground":"#0f172a","editorGroupHeader.tabsBorder":"#2b3a52",
+    "tab.activeBackground":"#0f172a","tab.activeForeground":"#f8fafc","tab.activeBorderTop":"#7c3aed","tab.border":"#2b3a52","tab.inactiveBackground":"#1e293b","tab.inactiveForeground":"#cbd5e1","tab.hoverBackground":"#1f2937",
+    "editor.background":"#0f172a","editor.foreground":"#f1f5f9","editor.lineHighlightBackground":"#1c2540","editor.selectionBackground":"#43526dcc","editor.inactiveSelectionBackground":"#2a385388","editorCursor.foreground":"#f8fafc","editorLineNumber.foreground":"#556882","editorLineNumber.activeForeground":"#e2e8f0",
+    "editorBracketMatch.background":"#33415566","editorBracketMatch.border":"#a78bfa",
+    "sideBar.background":"#1e293b","sideBar.foreground":"#e2e8f0","sideBar.border":"#2b3a52","sideBarSectionHeader.background":"#253149","sideBarSectionHeader.foreground":"#f8fafc",
+    "panel.background":"#0f172a","panel.border":"#2b3a52","panelTitle.activeForeground":"#f8fafc","panelTitle.inactiveForeground":"#94a3b8",
+    "activityBar.background":"#1e293b","activityBar.foreground":"#f8fafc","activityBarBadge.background":"#334155","activityBarBadge.foreground":"#f8fafc",
+    "statusBar.background":"#111827","statusBar.foreground":"#f1f5f9","statusBar.border":"#2b3a52",
+    "textLink.foreground":"#60a5fa","textLink.activeForeground":"#93c5fd","focusBorder":"#7c3aed"
+  },
+  "tokenColors":[
+    {"scope":["comment"],"settings":{"foreground":"#94a3b8","fontStyle":"italic"}},
+    {"scope":["keyword","storage.type","storage.modifier","keyword.control"],"settings":{"foreground":"#c084fc","fontStyle":"bold"}},
+    {"scope":["support.type","entity.name.type","entity.name.type.interface","storage.type.type","meta.type.annotation","entity.name.namespace"],"settings":{"foreground":"#60a5fa"}},
+    {"scope":["string","punctuation.definition.string"],"settings":{"foreground":"#4ade80"}},
+    {"scope":["constant.numeric"],"settings":{"foreground":"#f472b6"}},
+    {"scope":["variable.other.constant","support.constant","constant.language"],"settings":{"foreground":"#38bdf8"}},
+    {"scope":["entity.name.function","support.function","meta.function-call"],"settings":{"foreground":"#f1f5f9"}},
+    {"scope":["variable.parameter","meta.parameter"],"settings":{"foreground":"#e5e7eb"}},
+    {"scope":["entity.name.type.interface.ts","entity.other.inherited-class"],"settings":{"foreground":"#60a5fa","fontStyle":"bold"}},
+    {"scope":["entity.name.type.class","meta.class","support.class"],"settings":{"foreground":"#38bdf8"}},
+    {"scope":["meta.decorator","storage.type.annotation","punctuation.decorator"],"settings":{"foreground":"#fbbf24"}},
+    {"scope":["entity.name.tag","support.class.component","meta.tag.tsx"],"settings":{"foreground":"#fb923c"}},
+    {"scope":["entity.other.attribute-name","meta.tag.attributes.tsx"],"settings":{"foreground":"#38bdf8"}}
+  ],
+  "semanticTokenColors":{
+    "function":"#f1f5f9","parameter":"#e5e7eb","property":"#e5e7eb","variable.readonly":"#e5e7eb",
+    "type":"#60a5fa","class":"#38bdf8","enumMember":"#38bdf8","keyword":"#c084fc","string":"#4ade80","number":"#f472b6","comment":"#94a3b8"
+  }
+};
+
+applyTheme(DEFAULT_THEME);
+openFile("src/components/Navigation/ProfileMenu.tsx");
+
+/* load/paste/reset/download */
+document.getElementById("file").addEventListener("change", async (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  tryApply(await f.text());
+});
+document.getElementById("paste").addEventListener("click", async ()=>{
+  const text = await navigator.clipboard.readText().catch(()=>prompt("Paste theme JSON here:"));
+  if(text) tryApply(text);
+});
+document.getElementById("reset").addEventListener("click", ()=>{
+  applyTheme(DEFAULT_THEME); log(`Reset to: ${DEFAULT_THEME.name}`);
+});
+document.getElementById("download").addEventListener("click", ()=>{
+  const data = JSON.stringify(CURRENT_THEME ?? DEFAULT_THEME, null, 2);
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = ((CURRENT_THEME?.name||"theme").toLowerCase().replace(/\s+/g,"-")) + ".json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+/* cmd + open link */
+document.getElementById("open").addEventListener("click", ()=>{
+  alert("Tip: Load JSON to preview your theme, or Paste from clipboard.");
+});
+
+/* apply JSON */
+function tryApply(text){
+  try{
+    const json = JSON.parse(text);
+    applyTheme(json);
+    log(`Applied: ${json.name || "Unnamed Theme"}`);
+  }catch(err){
+    log("Failed to parse JSON: " + err.message, "err");
+  }
+}
+
+/* logging */
+function log(msg, kind){
+  const el = document.getElementById("panel");
+  const t = new Date().toLocaleTimeString();
+  const tag = kind==="err" ? "[error]" : "[info]";
+  el.innerHTML += `\n[${t}] ${tag} ${msg}`;
+  el.scrollTop = el.scrollHeight;
+}
+</script>
+</body>
+</html>
