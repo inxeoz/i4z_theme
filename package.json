@@ -1,7 +1,7 @@
 {
-  "name": "mytick-light",
-  "displayName": "Mytick Light",
-  "description": "A crisp light theme with violet keywords, lime strings, blue types, and slate comments.",
+  "name": "i4z theme",
+  "displayName": "i4z theme",
+  "description": "A crisp light / dark theme with violet keywords, lime strings, blue types, and slate comments.",
   "version": "0.0.1",
   "publisher": "you",
   "engines": { "vscode": "^1.80.0" },
@@ -9,22 +9,28 @@
   "contributes": {
     "themes": [
 
-         {
-        "label": "Dark Mtheme",
+        {
+        "label": "i4z_dark",
         "uiTheme": "vs",
-        "path": "./themes/Dmtheme.json"
+        "path": "./themes/i4z_dark.json"
       },
 
       {
-        "label": "Light Mtheme",
+        "label": "i4z_light",
         "uiTheme": "vs",
-        "path": "./themes/mtheme.json"
+        "path": "./themes/i4z_light.json"
       },
 
        {
-        "label": "Dark jtheme",
+        "label": "JD Dark",
         "uiTheme": "vs",
-        "path": "./themes/Jmtheme.json"
+        "path": "./themes/JD_dark.json"
+      },
+
+          {
+        "label": "JD Light",
+        "uiTheme": "vs",
+        "path": "./themes/JD_light.json"
       }
 
        

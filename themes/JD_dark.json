@@ -1,6 +1,6 @@
 {
   "$schema": "vscode://schemas/color-theme",
-  "name": "Jtheme Dark",
+  "name": "JD Dark",
   "type": "dark",
   "semanticHighlighting": true,
   "colors": {
