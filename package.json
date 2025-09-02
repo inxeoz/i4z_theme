@@ -31,6 +31,12 @@
         "label": "JD Light",
         "uiTheme": "vs",
         "path": "./themes/JD_light.json"
+      },
+
+        {
+        "label":  "i4z Light Warm",
+        "uiTheme": "vs",
+        "path": "./themes/i4z_light_Warm.json"
       }
 
        
