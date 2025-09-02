@@ -8,35 +8,41 @@
   "categories": ["Themes"],
   "contributes": {
     "themes": [
-
-        {
-        "label": "i4z_dark",
+      {
+        "label": "Midnight Snack",
+        "uiTheme": "vs-dark",
+        "path": "./themes/Midnight-Snack.json"
+      },
+      {
+        "label": "Unicorn Dreams",
         "uiTheme": "vs",
-        "path": "./themes/i4z_dark.json"
+        "path": "./themes/Unicorn-Dreams.json"
+      },
+      {
+        "label": "Coffee Overflow",
+        "uiTheme": "vs-dark",
+        "path": "./themes/Coffee-Overflow.json"
+      },
+      {
+        "label": "Sunshine Overload",
+        "uiTheme": "vs",
+        "path": "./themes/Sunshine-Overload.json"
+      },
+      {
+        "label": "Ninja Mode",
+        "uiTheme": "vs-dark",
+        "path": "./themes/Ninja-Mode.json"
+      },
+      {
+        "label": "Rainbow Explosion",
+        "uiTheme": "vs",
+        "path": "./themes/Rainbow-Explosion.json"
       },
 
       {
-        "label": "i4z_light",
+        "label": "Mugshot",
         "uiTheme": "vs",
-        "path": "./themes/i4z_light.json"
-      },
-
-       {
-        "label": "JD Dark",
-        "uiTheme": "vs",
-        "path": "./themes/JD_dark.json"
-      },
-
-          {
-        "label": "JD Light",
-        "uiTheme": "vs",
-        "path": "./themes/JD_light.json"
-      },
-
-        {
-        "label":  "i4z Light Warm",
-        "uiTheme": "vs",
-        "path": "./themes/i4z_light_Warm.json"
+        "path": "./themes/Mugshot.json"
       }
 
        
